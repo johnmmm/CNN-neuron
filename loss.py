@@ -18,9 +18,10 @@ class SoftmaxCrossEntropyLoss(object):
         self.name = name
 
     def forward(self, input, target):
-        '''Your codes here'''
-        pass
+        exp_uk = np.exp(input)
+        y_k = np.divide(exp_uk.T, np.sum(exp_uk, axis=1)).T
+        return np.mean(np.sum(np.multiply(y_k, target), axis=1))
 
     def backward(self, input, target):
-        '''Your codes here'''
-        pass
+        #input???
+        return (input - target) / len(input)
