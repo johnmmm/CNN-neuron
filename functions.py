@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.signal
+from datetime import datetime
 
 def conv2d_forward(input, W, b, kernel_size, pad):
     '''
@@ -75,6 +76,16 @@ def conv2d_backward(input, grad_output, W, b, kernel_size, pad):
                 grad_W[k, j, :, :] += scipy.signal.convolve2d(input[i, j, :, :], np.rot90(grad_output[i, k, :, :], 2), mode='valid')
     grad_b = np.sum(grad_output, axis=(0,2,3))
 
+    # W_3 = W.reshape(c_out, c_in, 1, kernel_size, kernel_size)
+    # grad_W_3 = grad_W.reshape(c_out, c_in, 1, kernel_size, kernel_size)
+    # input = input.transpose(1,0,2,3)
+    # grad_output = grad_output.transpose(1,0,2,3)
+    # for j in range(0, c_in):
+    #     for k in range(0, c_out):
+    #         grad_input[:, j, :, :] += scipy.signal.fftconvolve(grad_output[k, :, :, :], W_3[k, j, :, :, :], mode='full')
+    #         grad_W_3[k, j, :, :, :] += scipy.signal.fftconvolve(input[j, :, :, :], np.rot90(grad_output[k, :, :, :], 2), mode='valid')
+    # grad_W = grad_W_3.reshape(c_out, c_in, kernel_size, kernel_size)
+
     return grad_input, grad_W, grad_b
 
 
@@ -98,20 +109,9 @@ def avgpool2d_forward(input, kernel_size, pad):
 
     output = np.random.randn(batch, c_in, h_out, w_out)
     temp = np.random.randn(h_pool, w_pool)
-    # print(h_out)
-    # print(w_out)
-    # print(h_pool)
-    # print(w_pool)
-    for i in range(0, batch):
-        for j in range(0, c_in):
-            for k in range(0, h_out):
-                for l in range(0, w_out):
-                    startX = k * h_pool
-                    startY = l * w_pool
-                    #print(input[i][j][startX:startX+h_pool][startY:startY+w_pool])
-                    temp = input[i, j, startX:startX+h_pool, startY:startY+w_pool]
-                    output[i, j, k, l] = np.mean(temp)
-    # print('an?')
+
+    input_tem = input.reshape(batch, c_in, h_out, kernel_size, w_out, kernel_size)
+    output = np.mean(input_tem, axis=(3,5))
     return output
 
 

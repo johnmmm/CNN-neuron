@@ -22,7 +22,7 @@ class SoftmaxCrossEntropyLoss(object):
         exp_uk = np.exp(input)
         y_k = np.divide(exp_uk.T, np.sum(exp_uk, axis=1)).T
         self.save_in = y_k
-        return np.mean(np.sum(np.multiply(y_k, target), axis=1))
+        return -np.mean(np.sum(np.multiply(np.log(y_k), target), axis=1))
 
     def backward(self, input, target):
         y_k = self.save_in
