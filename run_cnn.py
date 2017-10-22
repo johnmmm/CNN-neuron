@@ -28,7 +28,7 @@ loss = SoftmaxCrossEntropyLoss(name='loss')
 #       'disp_freq' denotes number of iterations in one epoch to display information.
 
 config = {
-    'learning_rate': 0.002,
+    'learning_rate': 0.005,
     'weight_decay': 0.001,
     'momentum': 0.9,
     'batch_size': 100,
