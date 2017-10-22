@@ -31,6 +31,7 @@ class Relu(Layer):
 
     def backward(self, grad_output):
         input = self._saved_tensor
+        #print(len(grad_output))
         return grad_output * (input > 0)
 
 
