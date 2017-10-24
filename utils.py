@@ -2,6 +2,13 @@ from __future__ import division
 from __future__ import print_function
 import numpy as np
 from datetime import datetime
+import csv
+
+c=open("csv/dan.csv","w")
+writer=csv.writer(c)
+d=open("csv/test.csv","w")
+writer2=csv.writer(d)
+writer2.writerow(['test','loss_list','acc_list'])
 
 
 def onehot_encoding(label, max_num_class):

@@ -55,21 +55,16 @@ def conv2d_backward(input, grad_output, W, b, kernel_size, pad):
     grad_W = np.zeros(c_out*c_in*kernel_size*kernel_size*batch).reshape(c_out, c_in, batch, kernel_size, kernel_size)
     grad_b = np.zeros(c_out)
     
-    grad_output = grad_output[:, :, 1:h_out-1, 1:w_out-1]
+    input_pad = np.pad(input, ((0, 0), (0, 0), (pad, pad), (pad, pad)), mode='constant', constant_values=0)
 
     for i in range(0, batch):
         for j in range(0, c_in):
             for k in range(0, c_out):
-                grad_input[i, j, :, :] = scipy.signal.convolve2d(grad_output[i, k, :, :], W[k, j, :, :], mode='full')
-                # temp = scipy.signal.convolve2d(grad_output[i, k, :, :], W[k, j, :, :], mode='full')
-                # grad_input[i, j, k, :, :] = temp[pad:h_in+pad, pad:w_in+pad]
-                #need to change!
-    grad_input = grad_input.sum(axis=2)
+                temp = scipy.signal.convolve2d(grad_output[i, k, :, :], W[k, j, :, :], mode='full')
+                grad_input[i, j, k, :, :] = temp[pad:h_in+pad, pad:w_in+pad]
+                grad_W[k, j, i, :, :] = scipy.signal.convolve2d(input_pad[i, j, :, :], np.rot90(grad_output[i, k, :, :], 2), mode='valid')
 
-    for i in range(0, batch):
-        for j in range(0, c_in):
-            for k in range(0, c_out):  
-                grad_W[k, j, i, :, :] = scipy.signal.convolve2d(input[i, j, :, :], np.rot90(grad_output[i, k, :, :], 2), mode='valid')
+    grad_input = grad_input.sum(axis=2)
     grad_W = grad_W.sum(axis=2)
     grad_b = np.sum(grad_output, axis=(0,2,3)) #ok
 
@@ -115,7 +110,8 @@ def avgpool2d_backward(input, grad_output, kernel_size, pad):
     w_out = (w_in + 2 * pad) / kernel_size
 
     poolingsize = kernel_size**2
-    temp = grad_output.repeat(kernel_size, axis=2).repeat(kernel_size, axis=3)
-    temp = temp / poolingsize
-    grad_input = temp[:, :, pad:pad+h_in, pad:pad+w_in]
+
+    temp1 = grad_output.repeat(kernel_size, axis=2).repeat(kernel_size, axis=3)
+    temp2 = temp1 / poolingsize
+    grad_input = temp2[:, :, pad:h_in+pad, pad:w_in+pad]
     return grad_input

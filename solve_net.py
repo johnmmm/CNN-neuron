@@ -1,5 +1,7 @@
 from utils import LOG_INFO, onehot_encoding, calculate_acc
 import numpy as np
+from utils import writer
+from utils import writer2
 
 
 def data_iterator(x, y, batch_size, shuffle=True):
@@ -40,6 +42,11 @@ def train_net(model, loss, config, inputs, labels, batch_size, disp_freq):
 
         if iter_counter % disp_freq == 0:
             msg = '  Training iter %d, batch loss %.4f, batch acc %.4f' % (iter_counter, np.mean(loss_list), np.mean(acc_list))
+            rlist=[]
+            rlist.append(iter_counter)
+            rlist.append(round(np.mean(loss_list), 4))
+            rlist.append(round(np.mean(acc_list), 4))
+            writer.writerow(rlist)
             loss_list = []
             acc_list = []
             LOG_INFO(msg)
@@ -59,3 +66,8 @@ def test_net(model, loss, inputs, labels, batch_size):
 
     msg = '    Testing, total mean loss %.5f, total acc %.5f' % (np.mean(loss_list), np.mean(acc_list))
     LOG_INFO(msg)
+    rlist=[]
+    rlist.append('test')
+    rlist.append(round(np.mean(loss_list), 4))
+    rlist.append(round(np.mean(acc_list), 4))
+    writer2.writerow(rlist)
