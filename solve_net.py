@@ -2,6 +2,7 @@ from utils import LOG_INFO, onehot_encoding, calculate_acc
 import numpy as np
 from utils import writer
 from utils import writer2
+from utils import vis_square
 
 
 def data_iterator(x, y, batch_size, shuffle=True):
@@ -24,6 +25,8 @@ def train_net(model, loss, config, inputs, labels, batch_size, disp_freq):
         target = onehot_encoding(label, 10)
         iter_counter += 1
 
+        temp = input.transpose(1,0,2,3)
+        # vis_square(temp[0])
         # forward net
         output = model.forward(input)
         # calculate loss

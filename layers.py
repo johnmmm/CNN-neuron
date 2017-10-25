@@ -1,5 +1,6 @@
 import numpy as np
 from functions import conv2d_forward, conv2d_backward, avgpool2d_forward, avgpool2d_backward
+from utils import vis_square
 
 
 class Layer(object):
@@ -27,7 +28,14 @@ class Relu(Layer):
 
     def forward(self, input):
         self._saved_for_backward(input)
-        return np.maximum(0, input)
+        output = np.maximum(0, input)
+        # if self.name == 'relu1':
+        #     temp = output.transpose(1,0,2,3)
+        #     vis_square(temp[0])
+        #     vis_square(temp[1])
+        #     vis_square(temp[2])
+        #     vis_square(temp[3])
+        return output
 
     def backward(self, grad_output):
         input = self._saved_tensor

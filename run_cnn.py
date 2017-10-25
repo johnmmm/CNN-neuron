@@ -13,10 +13,10 @@ train_data, test_data, train_label, test_label = load_mnist_4d('data')
 model = Network()
 model.add(Conv2D('conv1', 1, 4, 3, 1, 0.01))
 model.add(Relu('relu1'))
-model.add(AvgPool2D('pool1', 4, 0))  # output shape: N x 4 x 14 x 14
-# model.add(Conv2D('conv2', 4, 4, 3, 1, 0.01))
-# model.add(Relu('relu2'))
-# model.add(AvgPool2D('pool2', 2, 0))  # output shape: N x 4 x 7 x 7
+model.add(AvgPool2D('pool1', 2, 0))  # output shape: N x 4 x 14 x 14
+model.add(Conv2D('conv2', 4, 4, 3, 1, 0.01))
+model.add(Relu('relu2'))
+model.add(AvgPool2D('pool2', 2, 0))  # output shape: N x 4 x 7 x 7
 model.add(Reshape('flatten', (-1, 196)))
 model.add(Linear('fc3', 196, 10, 0.1))
 
@@ -49,10 +49,6 @@ writer.writerow(rlist)
 writer.writerow(['iter_counter','loss_list','acc_list'])
 
 for epoch in range(config['max_epoch']):
-    # config['learning_rate'] = 0.02 - (epoch / 200) * (0.02 - 0.001)
-    # print(epoch / 200)
-    # print(config['learning_rate'])
-
     LOG_INFO('Training @ %d epoch...' % (epoch))
     train_net(model, loss, config, train_data, train_label, config['batch_size'], config['disp_freq'])
 

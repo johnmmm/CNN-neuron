@@ -1,6 +1,8 @@
 import numpy as np
 import scipy.signal
 from datetime import datetime
+from utils import vis_square
+
 
 def conv2d_forward(input, W, b, kernel_size, pad):
     '''
@@ -29,7 +31,9 @@ def conv2d_forward(input, W, b, kernel_size, pad):
         for j in range(0, c_out):
             for k in range(0, c_in):
                 output[i, j, :, :] += scipy.signal.convolve2d(input_pad[i, k, :, :], np.rot90(W[j, k, :, :], 2), mode='valid')+b[j]
-
+    
+    # if c_in == 1:
+    #     vis_square(output.transpose(0, 2, 3, 1))
     return output
 
 def conv2d_backward(input, grad_output, W, b, kernel_size, pad):
