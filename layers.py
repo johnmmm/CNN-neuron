@@ -29,6 +29,7 @@ class Relu(Layer):
     def forward(self, input):
         self._saved_for_backward(input)
         output = np.maximum(0, input)
+        #for visualization
         # if self.name == 'relu1':
         #     temp = output.transpose(1,0,2,3)
         #     vis_square(temp[0])

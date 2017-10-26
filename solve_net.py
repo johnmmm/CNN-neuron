@@ -26,7 +26,6 @@ def train_net(model, loss, config, inputs, labels, batch_size, disp_freq):
         iter_counter += 1
 
         temp = input.transpose(1,0,2,3)
-        # vis_square(temp[0])
         # forward net
         output = model.forward(input)
         # calculate loss
